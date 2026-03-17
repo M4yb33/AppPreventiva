@@ -28,6 +28,7 @@ export declare class AlertsService {
             latitude: number;
             longitude: number;
             assignedTo: string;
+            notes: string;
             internetDelivered: boolean;
             smsDelivered: boolean;
         }[];

@@ -67,7 +67,6 @@ export declare class DevicesService {
             tct_device_id: number;
         }[];
     } & {
-        dev_id: number;
         dev_uuid: string;
         dev_alias: string | null;
         dev_platform: string;
@@ -76,6 +75,7 @@ export declare class DevicesService {
         dev_settings_code_hash: string | null;
         dev_created_at: Date;
         dev_updated_at: Date;
+        dev_id: number;
     }>;
     getDeviceById(deviceId: number): Promise<{
         trusted_contacts: {
@@ -88,7 +88,6 @@ export declare class DevicesService {
             tct_device_id: number;
         }[];
     } & {
-        dev_id: number;
         dev_uuid: string;
         dev_alias: string | null;
         dev_platform: string;
@@ -97,5 +96,6 @@ export declare class DevicesService {
         dev_settings_code_hash: string | null;
         dev_created_at: Date;
         dev_updated_at: Date;
+        dev_id: number;
     }>;
 }

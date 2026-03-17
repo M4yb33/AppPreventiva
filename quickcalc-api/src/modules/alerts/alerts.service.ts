@@ -101,6 +101,7 @@ export class AlertsService {
         latitude: alert.alt_last_known_latitude,
         longitude: alert.alt_last_known_longitude,
         assignedTo: alert.alt_assigned_to,
+        notes: alert.alt_notes,
         internetDelivered: alert.alt_internet_delivered,
         smsDelivered: alert.alt_sms_delivered,
       })),
