@@ -232,7 +232,7 @@
     transform: translateX(0);
   }
 
-  .sidebar.open + .overlay {
+  .sidebar.open+.overlay {
     display: block;
   }
 

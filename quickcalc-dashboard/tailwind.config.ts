@@ -25,7 +25,7 @@ const config: Config = {
         danger: {
 
 
- 50: '#fef2f2',
+          50: '#fef2f2',
           100: '#fee2e2',
           200: '#fecaca',
           300: '#fca5a5',
