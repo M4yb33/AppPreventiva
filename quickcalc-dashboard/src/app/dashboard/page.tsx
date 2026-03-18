@@ -86,7 +86,7 @@ export default function DashboardPage() {
           <AlertsTable
             alerts={recentAlerts}
             isLoading={isLoading}
-            error={error}
+            error={error?.message || null}
           />
         </div>
       </div>

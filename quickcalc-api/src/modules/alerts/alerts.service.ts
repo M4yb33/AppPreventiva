@@ -42,15 +42,17 @@ export class AlertsService {
       },
     });
 
-    // Create initial location
-    await this.prisma.alc_alert_locations.create({
-      data: {
-        alc_alert_id: alert.alt_id,
-        alc_latitude: latitude,
-        alc_longitude: longitude,
-        alc_accuracy: accuracy,
-      },
-    });
+    // Create initial location only if latitude/longitude provided
+    if (latitude !== undefined && longitude !== undefined) {
+      await this.prisma.alc_alert_locations.create({
+        data: {
+          alc_alert_id: alert.alt_id,
+          alc_latitude: latitude,
+          alc_longitude: longitude,
+          alc_accuracy: accuracy,
+        },
+      });
+    }
 
     // Create log
     const triggerLabel = triggerType === 'PANIC_CODE' ? 'Código de pánico' : 'Modo de prueba';

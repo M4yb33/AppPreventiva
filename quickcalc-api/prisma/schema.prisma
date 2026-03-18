@@ -86,8 +86,8 @@ model alt_alerts {
   alt_status               AlertStatus @default(NEW)
   alt_trigger_type         TriggerType
   alt_triggered_at         DateTime    @default(now()) @db.Timestamptz()
-  alt_last_known_latitude  Float       @db.DoublePrecision
-  alt_last_known_longitude Float       @db.DoublePrecision
+  alt_last_known_latitude  Float?      @db.DoublePrecision
+  alt_last_known_longitude Float?      @db.DoublePrecision
   alt_internet_attempted   Boolean     @default(false)
   alt_internet_delivered   Boolean     @default(false)
   alt_sms_attempted        Boolean     @default(false)
