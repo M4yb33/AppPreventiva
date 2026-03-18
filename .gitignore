@@ -29,6 +29,25 @@ out/
 tsconfig.tsbuildinfo
 
 # ==============================================
+# EXPO & MOBILE SPECIFIC
+# ==============================================
+.expo/
+*/.expo/
+.expo-shared/
+*/.expo-shared/
+*.eas.json
+.env.local
+quickcalc-mobile/.env
+!quickcalc-mobile/.env.example
+.tm (TestFlight)
+# Metro bundler cache
+.metro-health-check*
+# Gradle cache
+.gradle/
+# Watchman cache
+.watchmanconfig
+
+# ==============================================
 # LOGS
 # ==============================================
 logs/
@@ -92,7 +111,6 @@ desktop.ini
 *.iml
 *.iws
 *.ipr
-*.iml
 .classpath
 .project
 
@@ -123,6 +141,7 @@ prisma/migrations/
 temp/
 tmp/
 .parcel-cache/
+.watchman-cookie
 
 # ==============================================
 # DEPLOYMENT
