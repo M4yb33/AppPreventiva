@@ -34,7 +34,6 @@ export async function getCurrentLocation(): Promise<LocationData | null> {
 
     const location = await Location.getCurrentPositionAsync({
       accuracy: Location.Accuracy.Balanced,
-      timeout: LOCATION_TIMEOUT,
     });
 
     return {

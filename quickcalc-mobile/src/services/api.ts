@@ -20,7 +20,7 @@ api.interceptors.response.use(
       silentError('Cannot reach API server. Check connection settings.');
       debugLog('API URL attempted:', API_BASE_URL);
     } else {
-      silentError('API Error', error.message);
+      silentError('API Error: ' + error.message);
     }
     return Promise.reject(error);
   }

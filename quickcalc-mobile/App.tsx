@@ -14,21 +14,15 @@ export default function App() {
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
-            cardStyle: { backgroundColor: '#000000' },
           }}
         >
           <Stack.Screen
             name="Calculator"
             component={CalculatorScreen}
-            options={{ animationEnabled: false }}
           />
           <Stack.Screen
             name="HiddenConfig"
             component={HiddenConfigScreen}
-            options={{
-              animationEnabled: true,
-              animationTypeForReplace: 'fade',
-            }}
           />
         </Stack.Navigator>
       </NavigationContainer>
