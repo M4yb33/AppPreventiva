@@ -26,7 +26,9 @@ export function useCalculator() {
         };
       }
 
-      if (prevState.display === '0') {
+      // IMPORTANTE: Permitir múltiples 0s para códigos secretos
+      // No reemplazar el 0 inicial, sino concatenar
+      if (prevState.display === '0' && num !== '0') {
         return {
           ...prevState,
           display: num,

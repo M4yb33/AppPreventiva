@@ -41,16 +41,24 @@ export function CalculatorScreen({ navigation }: any) {
     const fullInput = calculator.getFullInput();
     calculator.handleEquals();
 
+    // Log para debugging
+    console.log('[Calculator] Input before =:', fullInput);
+    console.log('[Calculator] Testing code:', fullInput + '=');
+
     // Verificar si es un código oculto
     const detection = codes.onEqualsPress(fullInput + '=');
+
+    console.log('[Calculator] Detection result:', detection);
 
     if (detection.detected) {
       switch (detection.type) {
         case 'PANIC':
+          console.log('[Calculator] PANIC mode activated');
           // Activar alerta de emergencia
           await triggerPanicMode();
           break;
         case 'SETTINGS':
+          console.log('[Calculator] SETTINGS mode - navigating...');
           // Navegar a configuración oculta
           navigation.navigate('HiddenConfig');
           break;
