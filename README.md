@@ -1,335 +1,499 @@
-# AppPreventiva - QuickCalc Emergency Alert System
+# AppPreventiva - Sistema Integral de Alertas de Emergencia
 
-Sistema integral de alertas de emergencia para víctimas de violencia, que incluye una aplicación móvil con calculadora oculta y un panel de gestión para operadores.
+Sistema completo de alertas de pánico para víctimas de violencia que combina una **aplicación móvil** (calculadora oculta), **backend API** y **dashboard de gestión** para operadores.
 
-## 🎯 Visión General
+## 📋 Tabla de Contenidos
 
-**AppPreventiva** es un sistema de alertas de pánico diseñado para ayudar a víctimas de violencia de género. El sistema permite activar alertas silenciosas mediante un código oculto en una calculadora funcional, sin levantar sospechas.
+- [Descripción del Proyecto](#descripción-del-proyecto)
+- [Tecnologías](#tecnologías)
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [Instalación y Ejecución](#instalación-y-ejecución)
+- [Flujo de Uso](#flujo-de-uso)
+- [MVP - Características Incluidas](#mvp---características-incluidas)
+- [Proximamente](#próximas-características)
+- [APIs y Endpoints](#apis-y-endpoints)
 
-### Componentes del Sistema
+---
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    AppPreventiva System                       │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐ │
-│  │   Mobile App │───▶│  Backend API │◀──│  Dashboard   │ │
-│  │  (Calculadora)│    │   (NestJS)   │    │   (Next.js)  │ │
-│  │  React Native │    │  PostgreSQL  │    │    Panel LV  │ │
-│  └──────────────┘    └──────────────┘    └──────────────┘ │
-│        ✅                    ✅                    ⏳        │
-│     PENDIENTE           COMPLETADO              PENDIENTE    │
-└─────────────────────────────────────────────────────────────┘
-```
+## 📱 Descripción del Proyecto
 
-## 📦 Estructura del Proyecto
+**AppPreventiva** es un sistema moderno de alertas de pánico diseñado para proteger a víctimas de violencia de género. El sistema funciona de manera invisible:
+
+1. **Calculadora Móvil**: Aplicación completamente funcional que sirve como aplicación normal
+2. **Código Oculto**: Ingresando un código especial (2580 = pánico, 0000 = configuración) se activan alertas silenciosas
+3. **Auto-localización**: Captura automática de ubicación GPS (con timeout)
+4. **Alias Personalizado**: Identificación con nombre o apodo (sincronizado con el backend)
+5. **Dashboard**: Panel de operadores con vista en tiempo real de alerta
+
+**Importante**: Las alertas se envían **sin notificaciones visibles** en el teléfono.
+
+---
+
+## 🛠️ Tecnologías
+
+### Backend API
+- **NestJS 10** - Framework TypeScript/Node.js
+- **PostgreSQL 14+** - Base de datos relacional
+- **Prisma ORM** - Gestor de ORM
+- **JWT** - Autenticación y autorización
+- **Bcrypt** - Hash de contraseñas
+
+### Frontend Web (Dashboard)
+- **Next.js 14** - Framework React con SSR
+- **TypeScript** - Tipado estático
+- **TailwindCSS** - Estilos utilities
+- **Axios** - Cliente HTTP
+- **Lucide React** - Iconos
+
+### App Móvil
+- **Expo 54.0.0** - Herramientas React Native
+- **React Native 0.81.5** - Framework móvil
+- **React 19.1.0** - DOM virtual
+- **expo-location** - Geolocalización
+- **expo-secure-store** - Almacenamiento seguro
+- **React Navigation** - Navegación entre pantallas
+
+---
+
+## 📁 Estructura del Proyecto
 
 ```
 AppPreventiva/
-├── quickcalc-api/           ✅ COMPLETADO
-│   ├── Backend con NestJS
-│   ├── Base de datos PostgreSQL
-│   ├── API REST completa
-│   └── Documentación completa
+├── quickcalc-api/           ✅ Backend NestJS
+│   ├── src/
+│   │   ├── modules/         → Módulos funcionales
+│   │   ├── guards/          → Guards de autenticación
+│   │   ├── pipes/           → Validación
+│   │   └── prisma/          → Esquema DB
+│   ├── package.json
+│   ├── .env.example
+│   └── prisma/
+│       ├── schema.prisma    → Esquema DB
+│       └── migrations/      → Historial de cambios
 │
-├── quickcalc-mobile/        ⏳ PENDIENTE
-│   ├── React Native + Expo
-│   ├── Calculadora funcional
-│   ├── Detección de código oculto
-│   └── Captura de ubicación
+├── quickcalc-dashboard/     ✅ Frontend Next.js
+│   ├── src/
+│   │   ├── app/             → Rutas de Next.js
+│   │   ├── components/      → Componentes React
+│   │   ├── hooks/           → Custom hooks
+│   │   ├── services/        → Llamadas a API
+│   │   ├── context/         → Context API
+│   │   └── types/           → Tipos TypeScript
+│   ├── package.json
+│   └── .env.example
 │
-└── quickcalc-dashboard/     ⏳ PENDIENTE
-    ├── Next.js + TypeScript
-    ├── Panel de operadores
-    ├── Gestión de alertas
-    └── Mapas y ubicaciones
+├── quickcalc-mobile/        ✅ App Expo
+│   ├── src/
+│   │   ├── screens/         → Pantallas principales
+│   │   ├── hooks/           → Custom hooks
+│   │   ├── services/        → APIs y servicios
+│   │   ├── storage/         → Almacenamiento seguro
+│   │   ├── types/           → Tipos TypeScript
+│   │   └── lib/             → Utilidades
+│   ├── App.tsx              → Componente raíz
+│   ├── package.json
+│   └── .env.example
+│
+├── package.json             → Scripts root
+└── README.md                → Este archivo
 ```
 
-## 🚀 Estado del Proyecto
+---
 
-### ✅ Backend API (100% Completo)
+## 🚀 Instalación y Ejecución
 
-El backend está **completamente funcional** y listo para usar.
+### Requisitos Previos
 
-**Ubicación:** `quickcalc-api/`
+- **Node.js 18+** - [Descargar](https://nodejs.org/)
+- **PostgreSQL 14+** - [Descargar](https://www.postgresql.org/)
+- **Git** - Control de versiones
+- **npm** - Gestor de paquetes (incluido en Node.js)
 
-**Características:**
-- ✅ API REST con 17 endpoints
-- ✅ Base de datos PostgreSQL con 6 tablas
-- ✅ Autenticación JWT
-- ✅ Sistema de roles (Admin, Operator, Viewer)
-- ✅ Sistema de alertas completo
-- ✅ Tracking de ubicación
-- ✅ Logs de auditoría
-- ✅ Documentación completa
-
-**Tecnologías:**
-- NestJS + TypeScript
-- Prisma ORM
-- PostgreSQL
-- JWT Authentication
-- Bcrypt
-
-**Documentación disponible:**
-```
-quickcalc-api/
-├── README.md                    - Introducción general
-├── QUICKSTART_WINDOWS.md        - Inicio rápido paso a paso
-├── COMPLETE_SUMMARY.md          - Resumen completo del proyecto
-├── PROJECT_STATUS.md            - Estado actual y próximos pasos
-├── COMMANDS.md                  - Comandos útiles
-├── API_TESTING.md               - Guía de testing de API
-├── ARCHITECTURE.md              - Arquitectura del sistema
-└── DEPLOYMENT.md                - Guía de deployment
+Verifica las versiones:
+```bash
+node --version     # v18.0.0 o superior
+npm --version      # 9.0.0 o superior
 ```
 
-**Para iniciar el backend:**
+---
+
+### 1️⃣ Configurar Backend API
+
+#### Paso 1: Instalar dependencias
 ```bash
 cd quickcalc-api
+npm install
+```
 
-# Ver la guía de inicio rápido
-cat QUICKSTART_WINDOWS.md
+#### Paso 2: Configurar base de datos
+Crea un archivo `.env` basado en `.env.example`:
 
-# O directamente:
+```bash
+cp .env.example .env
+```
+
+Edita `.env` y configura:
+```env
+DATABASE_URL="postgresql://postgres:tu_contraseña@localhost:5432/quickcalc_db"
+JWT_SECRET="tu_secreto_aleatorio_seguro_aqui"
+JWT_EXPIRATION="24h"
+```
+
+**Crear la base de datos:**
+```bash
+# Opción 1: Con pgAdmin (GUI)
+# Crear nueva base de datos llamada "quickcalc_db"
+
+# Opción 2: Con comando psql
+psql -U postgres
+CREATE DATABASE quickcalc_db;
+```
+
+#### Paso 3: Migrar y popular base de datos
+```bash
+# Ejecutar migraciones
 npm run prisma:migrate
+
+# Poblar datos iniciales (usuarios por defecto)
 npm run prisma:seed
+```
+
+**Usuarios creados por defecto:**
+- Admin: `admin@lv.com` / `Admin123!`
+- Operator: `operator@lv.com` / `Operator123!`
+
+#### Paso 4: Iniciar el servidor
+```bash
 npm run start:dev
 ```
 
-### ⏳ Mobile App (Pendiente)
-
-**Ubicación prevista:** `quickcalc-mobile/`
-
-**Funcionalidades planeadas:**
-- Calculadora completamente funcional
-- Detección de código de pánico oculto (ej: 9999)
-- Captura automática de ubicación GPS
-- Envío silencioso de alerta al backend
-- Modo de prueba
-- Configuración de códigos personalizados
-- Gestión de contactos de confianza
-
-**Stack tecnológico propuesto:**
-- React Native
-- Expo
-- TypeScript
-- React Navigation
-- Expo Location
-- Axios
-
-### ⏳ Dashboard Web (Pendiente)
-
-**Ubicación prevista:** `quickcalc-dashboard/`
-
-**Funcionalidades planeadas:**
-- Login de operadores
-- Vista de alertas en tiempo real
-- Mapa con ubicaciones
-- Gestión de estados de alertas
-- Historial de acciones
-- Estadísticas y métricas
-- Gestión de operadores (admin)
-
-**Stack tecnológico propuesto:**
-- Next.js 14
-- TypeScript
-- TailwindCSS
-- Mapbox/Google Maps
-- SWR o React Query
-- Chart.js
-
-## 🎯 Flujo del Sistema
-
-### 1. Activación de Alerta (Móvil)
-
-```
-Usuario ingresa código oculto (9999)
-        ↓
-App captura ubicación GPS
-        ↓
-Envía alerta al backend
-        ↓
-Backend guarda alerta (estado: NEW)
-        ↓
-App continúa funcionando normalmente
-(No da señales de que se activó)
+Verifica que está corriendo en `http://localhost:3000`:
+```bash
+curl http://localhost:3000/api/auth/login
 ```
 
-### 2. Gestión de Alerta (Dashboard)
+---
 
-```
-Operador ve alerta nueva
-        ↓
-Revisa ubicación en mapa
-        ↓
-Cambia estado a IN_PROGRESS
-        ↓
-Contacta a víctima o autoridades
-        ↓
-Actualiza notas y estado
-        ↓
-Cierra alerta cuando se resuelve
+### 2️⃣ Configurar Frontend Web (Dashboard)
+
+#### Paso 1: Instalar dependencias
+```bash
+cd quickcalc-dashboard
+npm install
 ```
 
-## 📊 Base de Datos
+#### Paso 2: Configurar variables de entorno
+```bash
+cp .env.example .env.local
+```
 
-### Nomenclatura de 3 Letras
+Edita `.env.local`:
+```env
+NEXT_PUBLIC_API_URL="http://localhost:3000/api"
+```
 
-| Prefijo | Tabla | Descripción |
-|---------|-------|-------------|
-| `dev_` | devices | Dispositivos móviles registrados |
-| `tct_` | trusted_contacts | Contactos de confianza de la víctima |
-| `alt_` | alerts | Alertas de emergencia (CORE) |
-| `alc_` | alert_locations | Ubicaciones GPS de las alertas |
-| `alg_` | alert_logs | Historial de acciones en alertas |
-| `opr_` | operators | Operadores del sistema LV |
+#### Paso 3: Iniciar servidor de desarrollo
+```bash
+npm run dev
+```
 
-### Estados de Alerta
+Accede en **`http://localhost:3001`** (Next.js usa puerto 3001 por defecto)
 
-- **NEW**: Alerta recién creada
-- **IN_REVIEW**: Siendo revisada por operador
-- **IN_PROGRESS**: Operador tomando acción
-- **ESCALATED**: Escalada a autoridades
-- **CLOSED**: Resuelta
-- **TEST**: Alerta de prueba
+#### Login en Dashboard
+```
+Email: operator@lv.com
+Password: Operator123!
+```
+
+El dashboard mostrará:
+- Alertas recientes (tarjetas estadísticas)
+- Estado de alertas en tiempo real
+- Auto-refresh cada 5 segundos (sin parpadeos)
+
+---
+
+### 3️⃣ Configurar App Móvil
+
+#### Paso 1: Instalar dependencias
+```bash
+cd quickcalc-mobile
+npm install
+```
+
+#### Paso 2: Configurar variables de entorno
+```bash
+cp .env.example .env
+```
+
+Edita `.env`:
+```env
+EXPO_PUBLIC_API_URL="http://localhost:3000"
+```
+
+#### Paso 3: Iniciar Expo
+```bash
+npm start
+```
+
+Verás un menú interactivo:
+```
+Press 'a' to open Android Emulator
+Press 'i' to open iOS Simulator
+Press 't' to enable Tunnel mode    ← RECOMENDADO
+Press 'q' to exit
+```
+
+**Opción Recomendada: Tunnel**
+```
+Presiona 't' para activar Tunnel
+```
+
+Esto generará un QR que puedes escanear con **Expo Go**:
+- [iOS App Store](https://apps.apple.com/es/app/expo-go/id982107779)
+- [Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent)
+
+#### Paso 4: Usar la App Móvil
+
+**Flujo base:**
+1. **Calculadora**: Usa como calculadora normal
+2. **Código 2580**: Activa pánico (envía alerta)
+3. **Código 0000**: Accede a configuración (establece alias y códigos)
+
+**En la pantalla de configuración:**
+- Alias: Tu nombre (aparecerá en la alerta)
+- Panic Code: Código para activar pánico (por defecto 2580)
+- Settings Code: Código para acceder a configuración (por defecto 0000)
+
+**Registrar dispositivo:**
+- Al first launch, la app genera UUID única
+- Se guarda en **almacenamiento seguro** (expo-secure-store)
+- UUID se envía con cada alerta
+
+---
+
+## 🔄 Flujo de Uso
+
+### Escenario: Usuario activa alerta
+
+```
+1. USUARIO (Móvil)
+   └─→ Toca calculadora
+   └─→ Ingresa código 2580 (pánico)
+   └─→ App captura ubicación (GPS)
+   └─→ App envía alerta: {uuid, alias, latitude, longitude}
+   └─→ App continúa funcionando normalmente (sin notificación)
+
+2. BACKEND (NestJS)
+   └─→ Recibe POST /api/alerts/create
+   └─→ Valida alias opcional
+   └─→ Guarda en BD: alerts (status: NEW)
+   └─→ Actualiza device.dev_alias con nuevo nombre
+   └─→ Retorna: {success: true, alertId: 123}
+
+3. DASHBOARD (Operador)
+   └─→ Auto-refresh cada 5 segundos (hook useAutoRefreshAlerts)
+   └─→ Detecta nueva alerta automáticamente
+   └─→ Muestra:
+       - Total de Alertas: +1
+       - Nuevas: +1
+       - Tabla con última alerta
+   └─→ Operador verifica ubicación en mapa
+   └─→ Cambia estado a IN_PROGRESS
+   └─→ Contacta autoridades / víctima
+   └─→ Cierra alerta cuando se resuelve
+```
+
+---
+
+## ✅ MVP - Características Incluidas
+
+### Backend API ✅ **COMPLETADO**
+- [x] Base de datos PostgreSQL con 6 tablas
+- [x] API REST completa (17 endpoints)
+- [x] Autenticación JWT
+- [x] Sistema de roles (Admin, Operator, Viewer)
+- [x] Crear/listar/actualizar alertas
+- [x] Tracking de ubicación GPS
+- [x] Logs de auditoría
+- [x] Validación de inputs
+- [x] Hash seguro de contraseñas (bcrypt)
+
+### App Móvil ✅ **COMPLETADO**
+- [x] Calculadora funcional (iOS-style)
+- [x] Detección de código 2580 (pánico)
+- [x] Detección de código 0000 (configuración)
+- [x] Pantalla de configuración
+- [x] Auto-localización con timeout (5 segundos)
+- [x] Envío silencioso de alertas
+- [x] Alias personalizado
+- [x] Almacenamiento seguro (SecureStore)
+- [x] UUID único por dispositivo
+- [x] Manejo de errores silencioso
+- [x] Sincronización de alias (DEVICE_INFO + APP_CONFIG)
+
+### Dashboard Web ✅ **COMPLETADO**
+- [x] Login de operadores
+- [x] Vista de alertas recientes (5 últimas)
+- [x] Estadísticas en tiempo real:
+  - Total de alertas
+  - Nuevas (status: NEW)
+  - En progreso (status: IN_PROGRESS)
+  - Cerradas (status: CLOSED)
+- [x] Auto-refresh inteligente (5 segundos)
+- [x] Cambio de detección: solo actualiza si hay cambios reales
+- [x] Sin parpadeos (isLoading solo en primera carga)
+- [x] Manejo de errores
+
+---
+
+## 🔮 Próximas Características
+
+### Backend
+- [ ] WebSockets para tiempo real (en lugar de polling)
+- [ ] Notificaciones push
+- [ ] Integración SMS
+- [ ] Reportes avanzados
+- [ ] Geofencing (alertas por zona)
+
+### App Móvil
+- [ ] App para iOS (actualmente solo Android via Expo)
+- [ ] Notificaciones push
+- [ ] Historial de alertas
+- [ ] Contactos de emergencia
+
+### Dashboard
+- [ ] Mapa interactivo con ubicaciones
+- [ ] Filtros avanzados de alertas
+- [ ] Reportes y búsqueda
+- [ ] Gestión de operadores (crear/editar/eliminar)
+- [ ] Exportar reportes (PDF/CSV)
+- [ ] Análisis de patrones
+
+---
+
+## 📡 APIs y Endpoints
+
+### Autenticación
+```
+POST   /api/auth/login              Login de operadores
+GET    /api/auth/me                 Perfil del usuario autenticado
+```
+
+### Dispositivos
+```
+POST   /api/devices/register        Registrar nuevo dispositivo
+PATCH  /api/devices/:id/configuration  Actualizar códigos de pánico
+GET    /api/devices/:id             Ver detalles del dispositivo
+```
+
+### Alertas (Core)
+```
+POST   /api/alerts/create           Crear alerta (desde móvil)
+GET    /api/alerts                  Listar todas las alertas
+GET    /api/alerts/:id              Ver detalle de una alerta
+PATCH  /api/alerts/:id/status       Cambiar estado de alerta
+GET    /api/alerts/:id/logs         Ver historial de acciones
+```
+
+### Dashboard
+```
+GET    /api/dashboard/summary       Resumen estadístico
+GET    /api/dashboard/recent-alerts Alertas recientes (últimas 5)
+```
+
+### Operadores (Admin)
+```
+POST   /api/operators               Crear nuevo operador
+GET    /api/operators               Listar operadores
+```
+
+---
+
+## 🧪 Testing de la API
+
+### Probar Login
+```bash
+curl -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@lv.com","password":"Admin123!"}'
+```
+
+Respuesta:
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIs...",
+  "user": {
+    "id": 1,
+    "email": "admin@lv.com",
+    "role": "ADMIN"
+  }
+}
+```
+
+### Probar Crear Alerta
+```bash
+curl -X POST http://localhost:3000/api/alerts/create \
+  -H "Content-Type: application/json" \
+  -d '{
+    "deviceUuid": "550e8400-e29b-41d4-a716-446655440000",
+    "alias": "María",
+    "triggerType": "PANIC_CODE",
+    "latitude": -0.123456,
+    "longitude": -78.123456,
+    "accuracy": 15.5
+  }'
+```
+
+---
 
 ## 🔐 Seguridad
 
 ### Backend
 - ✅ Passwords hasheados con bcrypt
-- ✅ Códigos de pánico hasheados
-- ✅ JWT con expiración
-- ✅ Validación de inputs
-- ✅ Guards de autenticación
-- ✅ RBAC (Control de acceso por roles)
+- ✅ JWT con expiración de 24h
+- ✅ Validación de inputs con class-validator
+- ✅ Guards de autenticación en endpoints
+- ✅ RBAC (Control de acceso por rol)
 
-### Mobile (Planeado)
-- 🔄 Almacenamiento seguro de tokens
-- 🔄 Comunicación HTTPS
-- 🔄 Validación local de códigos
-- 🔄 No guardar ubicaciones localmente
-
-### Dashboard (Planeado)
-- 🔄 Login seguro
-- 🔄 Sesiones con timeout
-- 🔄 Logs de auditoría
-- 🔄 Acceso según rol
-
-## 🚀 Desarrollo
-
-### Requisitos
-
-- Node.js 18+
-- PostgreSQL 14+
-- npm o pnpm
-- Git
-
-### Backend (Ya disponible)
-
-```bash
-# Navegar al backend
-cd quickcalc-api
-
-# Instalar dependencias (ya hecho)
-npm install
-
-# Configurar .env (ya hecho)
-# DATABASE_URL="postgresql://postgres:admin123@localhost:5432/quickcalc_db"
-
-# Iniciar PostgreSQL (tu acción)
-# Ver QUICKSTART_WINDOWS.md
-
-# Migrar base de datos
-npm run prisma:migrate
-
-# Poblar datos iniciales
-npm run prisma:seed
-
-# Iniciar servidor
-npm run start:dev
-
-# Servidor corriendo en http://localhost:3000
-```
-
-### Mobile (Próximamente)
-
-```bash
-# Crear proyecto
-cd ..
-npx create-expo-app quickcalc-mobile --template
-
-# Instalar dependencias
-cd quickcalc-mobile
-npm install
-
-# Iniciar
-npm start
-```
-
-### Dashboard (Próximamente)
-
-```bash
-# Crear proyecto
-cd ..
-npx create-next-app@latest quickcalc-dashboard --typescript --tailwind
-
-# Instalar dependencias
-cd quickcalc-dashboard
-npm install
-
-# Iniciar
-npm run dev
-```
-
-## 📖 API Endpoints
-
-### Autenticación
-- `POST /api/auth/login` - Login de operadores
-- `GET /api/auth/me` - Perfil del operador
-
-### Dispositivos
-- `POST /api/devices/register` - Registrar dispositivo
-- `PATCH /api/devices/:id/configuration` - Configurar códigos
-- `POST /api/devices/:id/contacts` - Agregar contacto
-- `GET /api/devices/:id/contacts` - Listar contactos
-
-### Alertas ⭐
-- `POST /api/alerts` - Crear alerta (PÁNICO)
-- `GET /api/alerts` - Listar alertas
-- `GET /api/alerts/:id` - Ver detalle de alerta
-- `PATCH /api/alerts/:id/status` - Cambiar estado
-- `POST /api/alerts/:id/location` - Agregar ubicación
-- `GET /api/alerts/:id/logs` - Ver historial
+### App Móvil
+- ✅ Almacenamiento seguro con expo-secure-store
+- ✅ UUID único por dispositivo
+- ✅ Alias sin exposición de identidad real
+- ✅ No guarda ubicaciones localmente
+- ✅ Comunicación HTTPS
 
 ### Dashboard
-- `GET /api/dashboard/summary` - Resumen estadístico
-- `GET /api/dashboard/recent-alerts` - Alertas recientes
+- ✅ Login obligatorio
+- ✅ Tokens JWT verificados
+- ✅ Logout automático
+- ✅ Acceso basado en rol
 
-### Operadores (Admin)
-- `POST /api/operators` - Crear operador
-- `GET /api/operators` - Listar operadores
+---
 
-## 🧪 Testing
+## 📊 Base de Datos
 
-### Backend
+### Tablas (Nomenclatura 3 letras)
 
-```bash
-cd quickcalc-api
+| Tabla | Prefijo | Descripción |
+|-------|---------|-------------|
+| `dev_devices` | `dev_` | Dispositivos móviles registrados |
+| `alt_alerts` | `alt_` | Alertas de emergencia |
+| `alc_alert_locations` | `alc_` | Ubicaciones GPS de alertas |
+| `alg_alert_logs` | `alg_` | Historial de acciones |
+| `opr_operators` | `opr_` | Operadores del sistema |
+| `tct_trusted_contacts` | `tct_` | Contactos de confianza (futuro) |
 
-# Verificar que el servidor está corriendo
-curl http://localhost:3000/api/auth/login
+### Estados de Alerta
+- `NEW` - Recién creada
+- `IN_REVIEW` - Revisión por operador
+- `IN_PROGRESS` - Acción en curso
+- `ESCALATED` - Escalada a autoridades
+- `CLOSED` - Resuelta
+- `TEST` - Alerta de prueba
 
-# Login
-curl -X POST http://localhost:3000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"admin@lv.com","password":"Admin123!"}'
+---
 
-# Ver guía completa de testing
-cat API_TESTING.md
-```
-
-## 📞 Credenciales por Defecto
+## 🔧 Credenciales por Defecto
 
 Después de ejecutar `npm run prisma:seed`:
 
@@ -341,135 +505,154 @@ Después de ejecutar `npm run prisma:seed`:
 - Email: `operator@lv.com`
 - Password: `Operator123!`
 
-**⚠️ Cambiar en producción!**
+⚠️ **Cambiar en producción**
 
-## 🗺️ Roadmap
+---
 
-### Fase 1: Backend ✅ COMPLETADO
-- [x] Diseño de base de datos
-- [x] API REST completa
-- [x] Autenticación JWT
-- [x] Sistema de alertas
-- [x] Tracking de ubicación
-- [x] Logs de auditoría
-- [x] Documentación
+## 🗺️ Futuros Pasos
 
-### Fase 2: Mobile App 🔄 EN PROGRESO
-- [ ] Calculadora funcional
-- [ ] Detección de código oculto
-- [ ] Integración con API
-- [ ] Captura de ubicación
-- [ ] Modo offline
-- [ ] Testing
+### Si quieres extender el proyecto:
 
-### Fase 3: Dashboard 📋 PLANEADO
-- [ ] Login y autenticación
-- [ ] Vista de alertas
-- [ ] Mapa de ubicaciones
-- [ ] Gestión de estados
-- [ ] Estadísticas
-- [ ] Gestión de operadores
+1. **Agregar WebSockets**
+   ```bash
+   npm install @nestjs/websockets ws
+   ```
+   Reemplazar polling en dashboard con tiempo real
 
-### Fase 4: Mejoras 🔮 FUTURO
-- [ ] Notificaciones push
-- [ ] WebSockets para tiempo real
-- [ ] Integración SMS
-- [ ] Geofencing
-- [ ] App iOS
-- [ ] Reportes avanzados
+2. **Agregar MapBox**
+   ```bash
+   npm install react-map-gl mapbox-gl
+   ```
+   Mostrar ubicaciones en mapa interactivo
 
-## 🤝 Contribuir
+3. **Agregar notificaciones push**
+   ```bash
+   npm install expo-notifications
+   ```
+   Alertas visibles en dispositivo operador
 
-Este es un proyecto académico para el curso de Desarrollo Asistido por Software.
+4. **Agregar SMS**
+   ```bash
+   npm install twilio
+   ```
+   Notificaciones por SMS a contactos
 
-### Estructura de Commits
+---
 
+## ⚠️ Troubleshooting
+
+### Backend no inicia
+```bash
+# Puerto 3000 ocupado?
+lsof -i :3000
+kill -9 PID
+
+# Base de datos no existe?
+psql -U postgres -c "CREATE DATABASE quickcalc_db;"
+
+# Usar nueva .env
+rm .env
+cp .env.example .env
+# Editar DATABASE_URL correctamente
 ```
-type(scope): message
 
-Tipos:
-- feat: Nueva característica
-- fix: Corrección de bug
-- docs: Documentación
-- refactor: Refactorización
-- test: Tests
+### Dashboard no se conecta al backend
+```bash
+# Verificar que backend está en http://localhost:3000
+curl http://localhost:3000/api/auth/me
+
+# Verificar NEXT_PUBLIC_API_URL en .env.local
+cat .env.local
+
+# Limpiar cache
+rm -rf .next
+npm run dev
 ```
+
+### App móvil no se conecta a backend
+```bash
+# Con Tunnel habilitado, la app puede acceder a localhost:3000
+# Sin Tunnel, necesitas IP local:
+# Cambiar en .env: EXPO_PUBLIC_API_URL="http://192.168.X.X:3000"
+
+# Verificar conexión desde móvil
+# Abre la URL en navegador del teléfono
+```
+
+---
+
+## 📚 Recursos Adicionales
+
+- [NestJS Docs](https://docs.nestjs.com/)
+- [Prisma Docs](https://www.prisma.io/docs/)
+- [Next.js Docs](https://nextjs.org/docs)
+- [React Native Docs](https://reactnative.dev/)
+- [Expo Docs](https://docs.expo.dev/)
+- [PostgreSQL Docs](https://www.postgresql.org/docs/)
+
+---
 
 ## 📄 Licencia
 
-MIT License - Ver LICENSE para más detalles
-
-## 👥 Equipo
-
-**Desarrollo:**
-- Backend: ✅ Completado
-- Mobile: 📋 Pendiente
-- Dashboard: 📋 Pendiente
-
-**Institución:**
-- Universidad: [Tu Universidad]
-- Curso: Desarrollo Asistido por Software
-- Profesor: [Nombre del profesor]
-
-## 📚 Recursos
-
-### Documentación del Backend
-- [Inicio Rápido](./quickcalc-api/QUICKSTART_WINDOWS.md)
-- [Resumen Completo](./quickcalc-api/COMPLETE_SUMMARY.md)
-- [API Testing](./quickcalc-api/API_TESTING.md)
-- [Arquitectura](./quickcalc-api/ARCHITECTURE.md)
-- [Deployment](./quickcalc-api/DEPLOYMENT.md)
-
-### Tecnologías
-- [NestJS Documentation](https://docs.nestjs.com/)
-- [Prisma Documentation](https://www.prisma.io/docs/)
-- [React Native Documentation](https://reactnative.dev/)
-- [Next.js Documentation](https://nextjs.org/docs)
-
-## 🎯 Próximos Pasos
-
-1. **Iniciar PostgreSQL y probar el backend**
-   ```bash
-   cd quickcalc-api
-   # Seguir QUICKSTART_WINDOWS.md
-   ```
-
-2. **Desarrollar la app móvil**
-   - Crear proyecto con Expo
-   - Implementar calculadora
-   - Conectar con API
-
-3. **Desarrollar el dashboard**
-   - Crear proyecto con Next.js
-   - Implementar vistas
-   - Integrar mapas
-
-## 📞 Soporte
-
-Para problemas con:
-- **Backend**: Ver `quickcalc-api/QUICKSTART_WINDOWS.md`
-- **API**: Ver `quickcalc-api/API_TESTING.md`
-- **General**: Revisar documentación en cada carpeta
+MIT License - Este es un proyecto académico para el curso **Desarrollo Asistido por Software**
 
 ---
 
-## ✨ Estado Actual
+## 👥 Contribuciones
 
-**Última actualización:** 2024-01-01
+Este proyecto fue desarrollado como parte de un trabajo académico.
 
-| Componente | Estado | Progreso |
-|------------|--------|----------|
-| Backend API | ✅ Completo | 100% |
-| Base de Datos | ✅ Completo | 100% |
-| Documentación | ✅ Completo | 100% |
-| Mobile App | ⏳ Pendiente | 0% |
-| Dashboard | ⏳ Pendiente | 0% |
-| Testing E2E | ⏳ Pendiente | 0% |
-
-**Progreso general:** 33% (1 de 3 componentes principales)
+**Stack usado:**
+- Backend: NestJS + Prisma + PostgreSQL ✅
+- Frontend: Next.js + TypeScript ✅
+- Mobile: Expo + React Native ✅
 
 ---
 
-**¡Gracias por tu interés en AppPreventiva!**
+## 📞 Estado del Proyecto
 
-Este proyecto tiene como objetivo ayudar a personas en situaciones de vulnerabilidad mediante tecnología accesible y efectiva.
+| Componente | Estado | Detalles |
+|-----------|--------|---------|
+| Backend API | ✅ Completo | REST API funcional, JWT, DB |
+| App Móvil | ✅ Completo | Calculadora, detección códigos, alertas |
+| Dashboard | ✅ Completo | Login, alertas en tiempo real, auto-refresh |
+| PostgreSQL | ✅ Completo | 6 tablas, migraciones, seed data |
+| Seguridad | ✅ Completo | Bcrypt, JWT, secure storage |
+| Testing E2E | ⏳ Futuro | Herramientas: Cypress, Playwright |
+
+**Progreso general:** ✅ **100% MVP Completo**
+
+---
+
+## 🎯 Para Comenzar Rápidamente
+
+```bash
+# Terminal 1: Backend
+cd quickcalc-api
+npm install
+npm run prisma:migrate
+npm run prisma:seed
+npm run start:dev
+
+# Terminal 2: Dashboard
+cd quickcalc-dashboard
+npm install
+npm run dev
+
+# Terminal 3: Mobile
+cd quickcalc-mobile
+npm install
+npm start
+# Presiona 't' para Tunnel
+```
+
+Accede:
+- Dashboard: http://localhost:3001
+- Backend API: http://localhost:3000
+- Mobile: Escanea QR con Expo Go
+
+---
+
+**¡El sistema está listo para usar! 🚀**
+
+Este proyecto demuestra un workflow completo: base de datos relacional, backend seguro, frontend responsivo y app móvil nativa.
