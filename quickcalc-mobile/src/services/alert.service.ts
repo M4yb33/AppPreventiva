@@ -28,6 +28,7 @@ export async function sendEmergencyAlert(
  */
 export function buildAlertPayload(
   deviceUuid: string,
+  alias?: string,
   latitude?: number,
   longitude?: number,
   accuracy?: number
@@ -36,6 +37,11 @@ export function buildAlertPayload(
     deviceUuid,
     triggerType: 'PANIC_CODE',
   };
+
+  // Solo incluir alias si tiene contenido (no vacío)
+  if (alias && alias.trim()) {
+    payload.alias = alias.trim();
+  }
 
   if (latitude !== undefined && longitude !== undefined) {
     payload.latitude = latitude;

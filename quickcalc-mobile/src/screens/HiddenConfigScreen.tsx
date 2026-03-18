@@ -66,15 +66,21 @@ export function HiddenConfigScreen({ navigation }: any) {
     setLoading(true);
 
     try {
+      // Guardar configuración
       await saveAppConfig(panicCode, settingsCode, alias);
+
+      // Pequeño delay para asegurar que se guarda completamente
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
       Alert.alert('Success', 'Configuration saved');
+
+      // Navegar después de guardar
       setTimeout(() => {
         navigation.goBack();
-      }, 500);
+      }, 800);
     } catch (error) {
       console.error('[HiddenConfig] Error saving config:', error);
       Alert.alert('Error', 'Failed to save configuration');
-    } finally {
       setLoading(false);
     }
   };

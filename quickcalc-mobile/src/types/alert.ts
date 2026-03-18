@@ -1,5 +1,6 @@
 export interface AlertPayload {
   deviceUuid: string;
+  alias?: string;
   triggerType: 'PANIC_CODE';
   latitude?: number;
   longitude?: number;

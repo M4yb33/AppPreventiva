@@ -10,6 +10,10 @@ export class CreateAlertDto {
   triggerType: TriggerType;
 
   @IsOptional()
+  @IsString()
+  alias?: string;
+
+  @IsOptional()
   @IsNumber()
   latitude?: number;
 

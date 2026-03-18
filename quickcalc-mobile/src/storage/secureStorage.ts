@@ -51,18 +51,40 @@ export async function saveDeviceInfo(uuid: string, alias?: string): Promise<void
 }
 
 /**
- * Recuperar información del dispositivo
+ * Recuperar información del dispositivo (incluyendo alias de configs)
  */
 export async function getDeviceInfo(): Promise<{ uuid: string; alias?: string } | null> {
   try {
     const uuid = await getSecureItem(STORAGE_KEYS.DEVICE_UUID);
     if (!uuid) return null;
 
-    const infoStr = await getSecureItem(STORAGE_KEYS.DEVICE_INFO);
-    if (!infoStr) return { uuid };
+    // Intentar obtener alias de DEVICE_INFO primero
+    let alias: string | undefined = undefined;
 
-    const info = JSON.parse(infoStr);
-    return { uuid: info.deviceUuid, alias: info.alias };
+    const infoStr = await getSecureItem(STORAGE_KEYS.DEVICE_INFO);
+    if (infoStr) {
+      try {
+        const info = JSON.parse(infoStr);
+        alias = info.alias;
+      } catch (e) {
+        // Ignorar error de parse
+      }
+    }
+
+    // Si no hay alias en DEVICE_INFO, intentar obtener de APP_CONFIG
+    if (!alias) {
+      const configStr = await getSecureItem(STORAGE_KEYS.APP_CONFIG);
+      if (configStr) {
+        try {
+          const config = JSON.parse(configStr);
+          alias = config.alias;
+        } catch (e) {
+          // Ignorar error de parse
+        }
+      }
+    }
+
+    return { uuid, alias };
   } catch (error) {
     silentError('Error getting device info');
     return null;
@@ -70,7 +92,7 @@ export async function getDeviceInfo(): Promise<{ uuid: string; alias?: string } 
 }
 
 /**
- * Guardar configuración de códigos
+ * Guardar configuración de códigos (también actualiza alias en DEVICE_INFO)
  */
 export async function saveAppConfig(
   panicCode: string,
@@ -84,8 +106,35 @@ export async function saveAppConfig(
     isConfigured: true,
     timestamp: new Date().toISOString(),
   });
+
   await setSecureItem(STORAGE_KEYS.APP_CONFIG, data);
   await setSecureItem(STORAGE_KEYS.IS_CONFIGURED, 'true');
+
+  // También actualizar alias en DEVICE_INFO si tenemos UUID
+  try {
+    const uuid = await getSecureItem(STORAGE_KEYS.DEVICE_UUID);
+    if (uuid) {
+      const infoStr = await getSecureItem(STORAGE_KEYS.DEVICE_INFO);
+      let info = {
+        deviceUuid: uuid,
+        alias: alias || '',
+        timestamp: new Date().toISOString(),
+      };
+
+      if (infoStr) {
+        try {
+          const existing = JSON.parse(infoStr);
+          info.timestamp = existing.timestamp;
+        } catch (e) {
+          // Usar timestamp actual
+        }
+      }
+
+      await setSecureItem(STORAGE_KEYS.DEVICE_INFO, JSON.stringify(info));
+    }
+  } catch (error) {
+    // Error silencioso - la configuración se guardó en APP_CONFIG
+  }
 }
 
 /**

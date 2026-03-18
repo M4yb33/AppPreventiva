@@ -25,7 +25,7 @@ export function useEmergencyAlert() {
     });
 
     try {
-      // Obtener información del dispositivo
+      // Obtener información del dispositivo (incluyendo alias)
       const deviceInfo = await getDeviceInfo();
       if (!deviceInfo?.uuid) {
         throw new Error('Device not registered');
@@ -34,9 +34,10 @@ export function useEmergencyAlert() {
       // Intentar obtener ubicación (con timeout)
       const location = await getLocationWithTimeout(5000);
 
-      // Construir payload
+      // Construir payload con alias
       const payload = buildAlertPayload(
         deviceInfo.uuid,
+        deviceInfo.alias,
         location?.latitude,
         location?.longitude,
         location?.accuracy

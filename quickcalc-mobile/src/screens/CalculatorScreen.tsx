@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Alert } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { CalculatorContainer } from '../components/calculator/CalculatorContainer';
 import { CalculatorDisplay } from '../components/calculator/CalculatorDisplay';
 import { CalculatorKeypad } from '../components/calculator/CalculatorKeypad';
@@ -19,6 +20,13 @@ export function CalculatorScreen({ navigation }: any) {
     initializeApp();
   }, []);
 
+  // Recargar códigos cada vez que la pantalla vuelve a enfocarse
+  useFocusEffect(
+    React.useCallback(() => {
+      codes.loadCodes();
+    }, [codes])
+  );
+
   const initializeApp = async () => {
     try {
       const isConfigured = await isAppConfigured();
@@ -28,7 +36,7 @@ export function CalculatorScreen({ navigation }: any) {
         await registerDevice();
       }
     } catch (error) {
-      console.log('[Calculator] Init error (silent)');
+      // Silent error - inicialización opcional
     }
   };
 
@@ -41,24 +49,16 @@ export function CalculatorScreen({ navigation }: any) {
     const fullInput = calculator.getFullInput();
     calculator.handleEquals();
 
-    // Log para debugging
-    console.log('[Calculator] Input before =:', fullInput);
-    console.log('[Calculator] Testing code:', fullInput + '=');
-
     // Verificar si es un código oculto
     const detection = codes.onEqualsPress(fullInput + '=');
-
-    console.log('[Calculator] Detection result:', detection);
 
     if (detection.detected) {
       switch (detection.type) {
         case 'PANIC':
-          console.log('[Calculator] PANIC mode activated');
           // Activar alerta de emergencia
           await triggerPanicMode();
           break;
         case 'SETTINGS':
-          console.log('[Calculator] SETTINGS mode - navigating...');
           // Navegar a configuración oculta
           navigation.navigate('HiddenConfig');
           break;

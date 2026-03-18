@@ -10,7 +10,7 @@ export class AlertsService {
   constructor(private prisma: PrismaService) { }
 
   async createAlert(createAlertDto: CreateAlertDto) {
-    const { deviceUuid, triggerType, latitude, longitude, accuracy } = createAlertDto;
+    const { deviceUuid, triggerType, alias, latitude, longitude, accuracy } = createAlertDto;
 
     // Find device
     const device = await this.prisma.dev_devices.findUnique({
@@ -19,6 +19,14 @@ export class AlertsService {
 
     if (!device) {
       throw new NotFoundException('Device not found');
+    }
+
+    // Update device alias if provided
+    if (alias) {
+      await this.prisma.dev_devices.update({
+        where: { dev_uuid: deviceUuid },
+        data: { dev_alias: alias },
+      });
     }
 
     // Create alert

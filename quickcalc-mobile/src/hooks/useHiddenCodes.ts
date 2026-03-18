@@ -26,7 +26,7 @@ export function useHiddenCodes() {
         setSettingsCode(config.settingsCode);
       }
     } catch (error) {
-      silentError('Error loading codes');
+      // Silent - usar defaults
     }
   }, []);
 
@@ -41,12 +41,10 @@ export function useHiddenCodes() {
       const codeInput = input.slice(0, -1);
 
       if (isEmergencyCode(codeInput, panicCode)) {
-        silentError('Emergency code detected');
         return { type: 'PANIC', detected: true };
       }
 
       if (isSettingsCode(codeInput, settingsCode)) {
-        silentError('Settings code detected');
         return { type: 'SETTINGS', detected: true };
       }
 
@@ -90,6 +88,7 @@ export function useHiddenCodes() {
     onNumberPress,
     onEqualsPress,
     onClear,
+    loadCodes,
     inputBuffer,
     setInputBuffer,
     panicCode,
