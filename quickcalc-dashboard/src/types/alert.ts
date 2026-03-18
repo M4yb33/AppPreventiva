@@ -27,7 +27,6 @@ export interface AlertLocation {
 export interface AlertLog {
   logId: number;
   action: string;
-  performedBy: string | null;
   details: string | null;
   createdAt: string;
 }

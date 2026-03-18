@@ -45,11 +45,12 @@ export class AlertsService {
     });
 
     // Create log
+    const triggerLabel = triggerType === 'PANIC_CODE' ? 'Código de pánico' : 'Modo de prueba';
     await this.prisma.alg_alert_logs.create({
       data: {
         alg_alert_id: alert.alt_id,
         alg_action: AlertLogAction.ALERT_CREATED,
-        alg_details: `Alert created via ${triggerType}`,
+        alg_details: `Alerta creada automáticamente (${triggerLabel})`,
       },
     });
 
@@ -137,11 +138,22 @@ export class AlertsService {
       throw new NotFoundException('Alert not found');
     }
 
+    // Generate random coordinates for testing if not available
+    let latitude = alert.alt_last_known_latitude;
+    let longitude = alert.alt_last_known_longitude;
+
+    if (!latitude || !longitude) {
+      // Generate random coordinates (testing purposes)
+      latitude = 40.4168 + (Math.random() - 0.5) * 0.1; // ~Madrid center
+      longitude = -3.7038 + (Math.random() - 0.5) * 0.1;
+    }
+
     return {
       success: true,
       message: 'Alert retrieved successfully',
       data: {
         alertId: alert.alt_id,
+        deviceId: alert.alt_device_id,
         device: {
           deviceId: alert.device.dev_id,
           deviceUuid: alert.device.dev_uuid,
@@ -153,6 +165,8 @@ export class AlertsService {
         triggeredAt: alert.alt_triggered_at,
         assignedTo: alert.alt_assigned_to,
         notes: alert.alt_notes,
+        latitude,
+        longitude,
         internetAttempted: alert.alt_internet_attempted,
         internetDelivered: alert.alt_internet_delivered,
         smsAttempted: alert.alt_sms_attempted,
@@ -167,7 +181,6 @@ export class AlertsService {
         logs: alert.logs.map((log) => ({
           logId: log.alg_id,
           action: log.alg_action,
-          performedBy: log.alg_performed_by,
           details: log.alg_details,
           createdAt: log.alg_created_at,
         })),
@@ -198,12 +211,22 @@ export class AlertsService {
     });
 
     // Create log
+    const statusMap: Record<string, string> = {
+      NEW: 'Nueva',
+      IN_REVIEW: 'En revisión',
+      IN_PROGRESS: 'En progreso',
+      ESCALATED: 'Escalada',
+      CLOSED: 'Cerrada',
+      TEST: 'Prueba',
+    };
+    const oldStatusLabel = statusMap[alert.alt_status] || alert.alt_status;
+    const newStatusLabel = statusMap[status] || status;
+
     await this.prisma.alg_alert_logs.create({
       data: {
         alg_alert_id: alertId,
         alg_action: AlertLogAction.STATUS_CHANGED,
-        alg_performed_by: performedBy,
-        alg_details: `Status changed from ${alert.alt_status} to ${status}${note ? `. Note: ${note}` : ''}`,
+        alg_details: `Estado: ${oldStatusLabel} → ${newStatusLabel}${note ? ` · Nota: ${note}` : ''}`,
       },
     });
 

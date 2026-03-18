@@ -2,6 +2,7 @@
 
 import { AlertDetail, AlertStatus } from '@/types/alert';
 import { ALERT_STATUS_CONFIG } from '@/lib/constants';
+import { getStatusLabel, getTriggerTypeLabel } from '@/lib/alert-labels';
 import { AlertStatusBadge } from './AlertStatusBadge';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -24,7 +25,7 @@ export function AlertDetailCard({ alert, onOpenMap }: AlertDetailCardProps) {
             <span>{alert.deviceAlias || 'Dispositivo Sin Nombre'}</span>
           </h2>
           <p className={styles.subtitle}>
-            {alert.triggerType === 'PANIC_CODE' ? '🚨 Alerta de Pánico' : '🧪 Alerta de Prueba'}
+            {getTriggerTypeLabel(alert.triggerType)}
           </p>
         </div>
         <AlertStatusBadge status={alert.status} size="lg" />
@@ -62,10 +63,12 @@ export function AlertDetailCard({ alert, onOpenMap }: AlertDetailCardProps) {
                 Coordenadas:
               </span>
               <code className={styles.code}>
-                {alert.latitude.toFixed(6)}, {alert.longitude.toFixed(6)}
+                {alert.latitude && alert.longitude
+                  ? `${alert.latitude.toFixed(6)}, ${alert.longitude.toFixed(6)}`
+                  : 'No disponible'}
               </code>
             </div>
-            {onOpenMap && (
+            {onOpenMap && alert.latitude && alert.longitude && (
               <button onClick={onOpenMap} className={styles.mapBtn}>
                 📍 Abrir en Google Maps
               </button>

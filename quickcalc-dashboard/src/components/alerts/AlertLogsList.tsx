@@ -4,6 +4,7 @@ import { AlertLog } from '@/types/alert';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Activity, Loader2 } from 'lucide-react';
+import { getAlertActionLabel, translateLogDetails } from '@/lib/alert-labels';
 import styles from './AlertLogsList.module.css';
 
 interface AlertLogsListProps {
@@ -52,7 +53,7 @@ export function AlertLogsList({ logs, isLoading, error }: AlertLogsListProps) {
           {/* Content */}
           <div className={styles.content}>
             <div className={styles.header}>
-              <span className={styles.action}>{log.action}</span>
+              <span className={styles.action}>{getAlertActionLabel(log.action)}</span>
               <time className={styles.time} dateTime={log.createdAt}>
                 {format(new Date(log.createdAt), 'dd/MM/yyyy HH:mm', {
                   locale: es,
@@ -60,12 +61,8 @@ export function AlertLogsList({ logs, isLoading, error }: AlertLogsListProps) {
               </time>
             </div>
 
-            {log.performedBy && (
-              <p className={styles.performer}>Por: {log.performedBy}</p>
-            )}
-
             {log.details && (
-              <div className={styles.details}>{log.details}</div>
+              <div className={styles.details}>{translateLogDetails(log.details)}</div>
             )}
           </div>
         </div>

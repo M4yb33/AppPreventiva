@@ -38,6 +38,7 @@ export declare class AlertsController {
         message: string;
         data: {
             alertId: number;
+            deviceId: number;
             device: {
                 deviceId: number;
                 deviceUuid: string;
@@ -49,6 +50,8 @@ export declare class AlertsController {
             triggeredAt: Date;
             assignedTo: string;
             notes: string;
+            latitude: number;
+            longitude: number;
             internetAttempted: boolean;
             internetDelivered: boolean;
             smsAttempted: boolean;
@@ -63,7 +66,6 @@ export declare class AlertsController {
             logs: {
                 logId: number;
                 action: string;
-                performedBy: string;
                 details: string;
                 createdAt: Date;
             }[];

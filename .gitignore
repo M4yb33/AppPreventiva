@@ -1,9 +1,37 @@
-# compiled output
-/dist
-/node_modules
+# ==============================================
+# DEPENDENCIES
+# ==============================================
+node_modules/
+*/node_modules/
+/.pnp
+.pnp.js
+package-lock.json
+*/package-lock.json
+yarn.lock
+*/yarn.lock
+pnpm-lock.yaml
+*/pnpm-lock.yaml
 
-# Logs
-logs
+# ==============================================
+# BUILD & DIST (GENERATED FILES)
+# ==============================================
+# Do NOT commit compiled output
+dist/
+*/dist/
+/build
+*/build/
+.next/
+*/.next/
+next-env.d.ts
+*/next-env.d.ts
+out/
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# ==============================================
+# LOGS
+# ==============================================
+logs/
 *.log
 npm-debug.log*
 pnpm-debug.log*
@@ -11,36 +39,101 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-# OS
-.DS_Store
+# ==============================================
+# RUNTIME DATA
+# ==============================================
+pids/
+*.pid
+*.seed
+*.pid.lock
 
-# Tests
-/coverage
+# ==============================================
+# TESTING
+# ==============================================
+coverage/
 /.nyc_output
+.jest/
+.nyc_output/
 
-# IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
+# ==============================================
+# ENVIRONMENT VARIABLES (SECRETS)
+# ==============================================
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# IDE - VSCode
+# ==============================================
+# OS SPECIFIC
+# ==============================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ==============================================
+# IDE & EDITORS
+# ==============================================
+# VSCode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# Environment
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# WebStorm, IntelliJ IDEA, PyCharm, Rider
+.idea/
+*.iml
+*.iws
+*.ipr
+*.iml
+.classpath
+.project
 
-# Prisma
+# Sublime
+*.sublime-workspace
+*.sublime-project
+
+# Other
+.c9/
+*.launch
+.settings/
+*.swp
+*.swo
+*~
+.vimrc
+
+# ==============================================
+# DATABASE MIGRATIONS
+# ==============================================
 prisma/migrations/
-node_modules
+
+# ==============================================
+# CACHE & TEMPORARY
+# ==============================================
+.cache/
+.eslintcache
+.turbo/
+temp/
+tmp/
+.parcel-cache/
+
+# ==============================================
+# DEPLOYMENT
+# ==============================================
+docker-compose.override.yml
+
+# ==============================================
+# MISC
+# ==============================================
+*.bak
+*.temp
+.env.vault
+.npmrc
+

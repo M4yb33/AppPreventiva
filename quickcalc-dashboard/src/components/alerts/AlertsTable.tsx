@@ -5,6 +5,7 @@ import { formatDistanceToNow, format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { ChevronRight, AlertTriangle, Loader2 } from 'lucide-react';
 import { Alert } from '@/types/alert';
+import { getTriggerTypeLabel } from '@/lib/alert-labels';
 import { AlertStatusBadge } from './AlertStatusBadge';
 import styles from './AlertsTable.module.css';
 
@@ -84,7 +85,7 @@ export function AlertsTable({ alerts, isLoading, error }: AlertsTableProps) {
                   </td>
                   <td className={styles.tdType}>
                     <span className={styles.triggerBadge}>
-                      {alert.triggerType === 'PANIC_CODE' ? '🚨 Pánico' : '🧪 Test'}
+                      {getTriggerTypeLabel(alert.triggerType)}
                     </span>
                   </td>
                   <td className={styles.tdTime}>
