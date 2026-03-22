@@ -1,0 +1,150 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum AlertStatus {
+  NEW
+  IN_REVIEW
+  IN_PROGRESS
+  ESCALATED
+  CLOSED
+  TEST
+}
+
+enum TriggerType {
+  PANIC_CODE
+  TEST_MODE
+}
+
+enum OperatorRole {
+  ADMIN
+  OPERATOR
+  VIEWER
+}
+
+// ============================================
+// MODELS - Nomenclatura de 3 letras
+// dev_ = Device
+// tct_ = Trusted Contact
+// alt_ = Alert
+// alc_ = Alert Location
+// alg_ = Alert Log
+// opr_ = Operator
+// ============================================
+
+// dev_ = Device
+model dev_devices {
+  dev_id                 Int      @id @default(autoincrement())
+  dev_uuid               String   @unique @db.VarChar(255)
+  dev_alias              String?  @db.VarChar(100)
+  dev_platform           String   @db.VarChar(50)
+  dev_is_configured      Boolean  @default(false)
+  dev_panic_code_hash    String?  @db.VarChar(255)
+  dev_settings_code_hash String?  @db.VarChar(255)
+  dev_created_at         DateTime @default(now()) @db.Timestamptz()
+  dev_updated_at         DateTime @updatedAt @db.Timestamptz()
+
+  // Relations
+  trusted_contacts tct_trusted_contacts[]
+  alerts           alt_alerts[]
+
+  @@map("dev_devices")
+}
+
+// tct_ = Trusted Contact
+model tct_trusted_contacts {
+  tct_id           Int      @id @default(autoincrement())
+  tct_device_id    Int
+  tct_name         String   @db.VarChar(100)
+  tct_phone        String   @db.VarChar(20)
+  tct_relationship String?  @db.VarChar(50)
+  tct_priority     Int      @default(1)
+  tct_created_at   DateTime @default(now()) @db.Timestamptz()
+
+  // Relations
+  device dev_devices @relation(fields: [tct_device_id], references: [dev_id], onDelete: Cascade)
+
+  @@map("tct_trusted_contacts")
+}
+
+// alt_ = Alert
+model alt_alerts {
+  alt_id                   Int         @id @default(autoincrement())
+  alt_device_id            Int
+  alt_status               AlertStatus @default(NEW)
+  alt_trigger_type         TriggerType
+  alt_triggered_at         DateTime    @default(now()) @db.Timestamptz()
+  alt_last_known_latitude  Float       @db.DoublePrecision
+  alt_last_known_longitude Float       @db.DoublePrecision
+  alt_internet_attempted   Boolean     @default(false)
+  alt_internet_delivered   Boolean     @default(false)
+  alt_sms_attempted        Boolean     @default(false)
+  alt_sms_delivered        Boolean     @default(false)
+  alt_assigned_to          String?     @db.VarChar(100)
+  alt_notes                String?     @db.Text
+  alt_created_at           DateTime    @default(now()) @db.Timestamptz()
+  alt_updated_at           DateTime    @updatedAt @db.Timestamptz()
+
+  // Relations
+  device    dev_devices           @relation(fields: [alt_device_id], references: [dev_id], onDelete: Cascade)
+  locations alc_alert_locations[]
+  logs      alg_alert_logs[]
+
+  @@map("alt_alerts")
+}
+
+// alc_ = Alert Location
+model alc_alert_locations {
+  alc_id          Int      @id @default(autoincrement())
+  alc_alert_id    Int
+  alc_latitude    Float    @db.DoublePrecision
+  alc_longitude   Float    @db.DoublePrecision
+  alc_accuracy    Float?   @db.DoublePrecision
+  alc_captured_at DateTime @default(now()) @db.Timestamptz()
+
+  // Relations
+  alert alt_alerts @relation(fields: [alc_alert_id], references: [alt_id], onDelete: Cascade)
+
+  @@map("alc_alert_locations")
+}
+
+// alg_ = Alert Log
+model alg_alert_logs {
+  alg_id           Int      @id @default(autoincrement())
+  alg_alert_id     Int
+  alg_action       String   @db.VarChar(100)
+  alg_performed_by String?  @db.VarChar(100)
+  alg_details      String?  @db.Text
+  alg_created_at   DateTime @default(now()) @db.Timestamptz()
+
+  // Relations
+  alert alt_alerts @relation(fields: [alg_alert_id], references: [alt_id], onDelete: Cascade)
+
+  @@map("alg_alert_logs")
+}
+
+// opr_ = Operator
+model opr_operators {
+  opr_id            Int          @id @default(autoincrement())
+  opr_full_name     String       @db.VarChar(100)
+  opr_email         String       @unique @db.VarChar(150)
+  opr_password_hash String       @db.VarChar(255)
+  opr_role          OperatorRole @default(OPERATOR)
+  opr_is_active     Boolean      @default(true)
+  opr_created_at    DateTime     @default(now()) @db.Timestamptz()
+  opr_updated_at    DateTime     @updatedAt @db.Timestamptz()
+
+  @@map("opr_operators")
+}
