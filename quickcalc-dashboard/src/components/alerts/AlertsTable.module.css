@@ -1,0 +1,260 @@
+.tableWrapper {
+  background: white;
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.thead {
+  background: #f8fafc;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.thead th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #475569;
+  text-transform: uppercase;
+  font-size: 0.8125rem;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.tbody tr {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.2s ease;
+}
+
+.tbody tr:hover {
+  background: #f8fafc;
+}
+
+.tbody tr:last-child {
+  border-bottom: none;
+}
+
+.tbody td {
+  padding: 1rem;
+  color: #0f172a;
+}
+
+/* Column widths */
+.thId {
+  width: 10%;
+}
+
+.thDevice {
+  width: 30%;
+}
+
+.thType {
+  width: 12%;
+}
+
+.thTime {
+  width: 20%;
+}
+
+.thStatus {
+  width: 15%;
+}
+
+.thAction {
+  width: 5%;
+  text-align: center;
+}
+
+.tdId,
+.tdDevice,
+.tdType,
+.tdTime,
+.tdStatus,
+.tdAction {
+  vertical-align: middle;
+}
+
+.code {
+  font-family: var(--font-geist-mono), monospace;
+  background: #f1f5f9;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #475569;
+}
+
+.deviceInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.deviceAlias {
+  font-weight: 500;
+  color: #0f172a;
+}
+
+.deviceUuid {
+  font-size: 0.8125rem;
+  color: #64748b;
+  font-family: var(--font-geist-mono), monospace;
+}
+
+.triggerBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  background: #f1f5f9;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #475569;
+}
+
+.actionLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 0.5rem;
+  color: #7c3aed;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.actionLink:hover {
+  background: #f1f5f9;
+  color: #6d28d9;
+}
+
+/* Loading state */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 3rem 2rem;
+  background: white;
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error state */
+.error {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 0.75rem;
+  color: #991b1b;
+  font-weight: 500;
+}
+
+.error svg {
+  flex-shrink: 0;
+}
+
+/* Empty state */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 3rem 2rem;
+  background: white;
+  border-radius: 0.75rem;
+  border: 1px dashed #e2e8f0;
+}
+
+.emptyIcon {
+  color: #cbd5e1;
+  padding: 1.5rem;
+  background: #f1f5f9;
+  border-radius: 1rem;
+}
+
+.emptyTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+}
+
+.emptySubtitle {
+  color: #64748b;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tableWrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table {
+    min-width: 600px;
+  }
+
+  .thead th {
+    padding: 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .tbody td {
+    padding: 0.75rem;
+  }
+
+  .thId {
+    width: 8%;
+  }
+
+  .thDevice {
+    width: 25%;
+  }
+
+  .thType {
+    width: 10%;
+  }
+
+  .thTime {
+    width: 22%;
+  }
+
+  .thStatus {
+    width: 20%;
+  }
+
+  .thAction {
+    width: 6%;
+  }
+}

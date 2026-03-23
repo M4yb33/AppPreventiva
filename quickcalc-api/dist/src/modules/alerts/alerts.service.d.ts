@@ -28,6 +28,7 @@ export declare class AlertsService {
             latitude: number;
             longitude: number;
             assignedTo: string;
+            notes: string;
             internetDelivered: boolean;
             smsDelivered: boolean;
         }[];
@@ -37,6 +38,7 @@ export declare class AlertsService {
         message: string;
         data: {
             alertId: number;
+            deviceId: number;
             device: {
                 deviceId: number;
                 deviceUuid: string;
@@ -48,6 +50,8 @@ export declare class AlertsService {
             triggeredAt: Date;
             assignedTo: string;
             notes: string;
+            latitude: number;
+            longitude: number;
             internetAttempted: boolean;
             internetDelivered: boolean;
             smsAttempted: boolean;
@@ -62,7 +66,6 @@ export declare class AlertsService {
             logs: {
                 logId: number;
                 action: string;
-                performedBy: string;
                 details: string;
                 createdAt: Date;
             }[];
