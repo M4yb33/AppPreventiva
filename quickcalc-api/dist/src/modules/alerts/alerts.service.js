@@ -18,12 +18,18 @@ let AlertsService = class AlertsService {
         this.prisma = prisma;
     }
     async createAlert(createAlertDto) {
-        const { deviceUuid, triggerType, latitude, longitude, accuracy } = createAlertDto;
+        const { deviceUuid, triggerType, alias, latitude, longitude, accuracy } = createAlertDto;
         const device = await this.prisma.dev_devices.findUnique({
             where: { dev_uuid: deviceUuid },
         });
         if (!device) {
             throw new common_1.NotFoundException('Device not found');
+        }
+        if (alias) {
+            await this.prisma.dev_devices.update({
+                where: { dev_uuid: deviceUuid },
+                data: { dev_alias: alias },
+            });
         }
         const alert = await this.prisma.alt_alerts.create({
             data: {
@@ -36,14 +42,16 @@ let AlertsService = class AlertsService {
                 alt_internet_delivered: true,
             },
         });
-        await this.prisma.alc_alert_locations.create({
-            data: {
-                alc_alert_id: alert.alt_id,
-                alc_latitude: latitude,
-                alc_longitude: longitude,
-                alc_accuracy: accuracy,
-            },
-        });
+        if (latitude !== undefined && longitude !== undefined) {
+            await this.prisma.alc_alert_locations.create({
+                data: {
+                    alc_alert_id: alert.alt_id,
+                    alc_latitude: latitude,
+                    alc_longitude: longitude,
+                    alc_accuracy: accuracy,
+                },
+            });
+        }
         const triggerLabel = triggerType === 'PANIC_CODE' ? 'Código de pánico' : 'Modo de prueba';
         await this.prisma.alg_alert_logs.create({
             data: {

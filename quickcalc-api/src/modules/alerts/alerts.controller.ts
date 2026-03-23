@@ -8,7 +8,7 @@ import { AddLocationDto } from './dto/add-location.dto';
 export class AlertsController {
   constructor(private readonly alertsService: AlertsService) { }
 
-  @Post()
+  @Post('create')
   async createAlert(@Body() createAlertDto: CreateAlertDto) {
     return this.alertsService.createAlert(createAlertDto);
   }

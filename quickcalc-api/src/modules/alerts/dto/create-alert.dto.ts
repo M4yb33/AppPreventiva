@@ -9,11 +9,17 @@ export class CreateAlertDto {
   @IsEnum(TriggerType)
   triggerType: TriggerType;
 
-  @IsNumber()
-  latitude: number;
+  @IsOptional()
+  @IsString()
+  alias?: string;
 
+  @IsOptional()
   @IsNumber()
-  longitude: number;
+  latitude?: number;
+
+  @IsOptional()
+  @IsNumber()
+  longitude?: number;
 
   @IsOptional()
   @IsNumber()

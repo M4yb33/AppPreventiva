@@ -25,10 +25,17 @@ __decorate([
     __metadata("design:type", String)
 ], CreateAlertDto.prototype, "triggerType", void 0);
 __decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateAlertDto.prototype, "alias", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], CreateAlertDto.prototype, "latitude", void 0);
 __decorate([
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], CreateAlertDto.prototype, "longitude", void 0);

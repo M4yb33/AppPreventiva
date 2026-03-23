@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -11,7 +12,38 @@ async function main() {
   await prisma.alc_alert_locations.deleteMany({});
   await prisma.alt_alerts.deleteMany({});
   await prisma.dev_devices.deleteMany({});
+  await prisma.opr_operators.deleteMany({});
   console.log('✨ Database cleaned');
+
+  // 0. Create test operators
+  console.log('👤 Creating test operators...');
+
+  const hashedPassword1 = await bcrypt.hash('Admin123!', 10);
+  const hashedPassword2 = await bcrypt.hash('Operator123!', 10);
+
+  const operator1 = await prisma.opr_operators.create({
+    data: {
+      opr_email: 'admin@lv.com',
+      opr_full_name: 'Administrator',
+      opr_password_hash: hashedPassword1,
+      opr_role: 'ADMIN',
+      opr_is_active: true,
+    },
+  });
+
+  const operator2 = await prisma.opr_operators.create({
+    data: {
+      opr_email: 'operator@lv.com',
+      opr_full_name: 'Test Operator',
+      opr_password_hash: hashedPassword2,
+      opr_role: 'OPERATOR',
+      opr_is_active: true,
+    },
+  });
+
+  console.log('✅ Operators created:');
+  console.log('   Email: admin@lv.com | Password: Admin123! | Role: ADMIN');
+  console.log('   Email: operator@lv.com | Password: Operator123! | Role: OPERATOR');
 
   // 1. Create test devices
   console.log('📱 Creating test devices...');

@@ -1,10 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useAuth } from '@/context/AuthContext';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
-import { alertsService } from '@/services/alerts.service';
+import { useAutoRefreshAlerts } from '@/hooks/useAutoRefreshAlerts';
 import { Alert } from '@/types/alert';
 import { AlertsTable } from '@/components/alerts/AlertsTable';
 import { AlertTriangle, TrendingUp, Clock, CheckCircle } from 'lucide-react';
@@ -12,10 +10,7 @@ import Link from 'next/link';
 import styles from './page.module.css';
 
 export default function DashboardPage() {
-  const router = useRouter();
   const [recentAlerts, setRecentAlerts] = useState<Alert[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState({
     total: 0,
     new: 0,
@@ -23,41 +18,32 @@ export default function DashboardPage() {
     closed: 0,
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        console.log('🔵 Fetching alerts from:', process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api');
-        const alerts = await alertsService.getAlerts();
-        console.log('✅ Alerts received:', alerts);
-        setRecentAlerts(alerts.slice(0, 5));
+  // Auto-refresh alerts with intelligent change detection
+  const { isLoading, error } = useAutoRefreshAlerts({
+    interval: 5000, // Poll every 5 seconds
+    enabled: true,
+    onAlertsChange: (alerts: Alert[]) => {
+      setRecentAlerts(alerts.slice(0, 5));
 
-        // Calculate stats
-        setStats({
-          total: alerts.length,
-          new: alerts.filter((a) => a.status === 'NEW').length,
-          inProgress: alerts.filter((a) => a.status === 'IN_PROGRESS').length,
-          closed: alerts.filter((a) => a.status === 'CLOSED').length,
-        });
-      } catch (err: any) {
-        console.error('❌ Error fetching data:', err);
-        setError(err.message || 'Error al cargar datos');
-        setStats({ total: 0, new: 0, inProgress: 0, closed: 0 });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+      // Calculate stats
+      setStats({
+        total: alerts.length,
+        new: alerts.filter((a) => a.status === 'NEW').length,
+        inProgress: alerts.filter((a) => a.status === 'IN_PROGRESS').length,
+        closed: alerts.filter((a) => a.status === 'CLOSED').length,
+      });
+    },
+    onError: (err: Error) => {
+      console.error('❌ Error fetching alerts:', err);
+    },
+  });
 
   return (
     <DashboardLayout pageTitle="Dashboard">
       <div className={styles.container}>
         {error && (
           <div className={styles.errorBanner}>
-            ⚠️ {error}
+            ⚠️ {error.message}
           </div>
         )}
 
@@ -100,7 +86,7 @@ export default function DashboardPage() {
           <AlertsTable
             alerts={recentAlerts}
             isLoading={isLoading}
-            error={error}
+            error={error?.message || null}
           />
         </div>
       </div>
